@@ -1,0 +1,5 @@
+name = Consolidator Example
+description = Provides an example usage of the Consolidator module. Developers can be inspired by this module to create their own Consolidator reports. See ./README.md for usage.
+core = 7.x
+dependencies[] = consolidator
+php = 7

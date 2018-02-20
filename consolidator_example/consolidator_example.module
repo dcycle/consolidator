@@ -1,0 +1,15 @@
+<?php
+
+if (!module_load_include('php', 'consolidator_example', 'autoload')) {
+  throw new \Exception('Could not find autoloader.');
+}
+
+use consolidator_example\ReportType\CleanAirStarWarsReport;
+
+function consolidator_example_consolidator_reports() {
+
+  return [
+    new CleanAirStarWarsReport(),
+  ];
+
+}

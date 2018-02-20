@@ -1,0 +1,4 @@
+name = Consolidator
+description = Allows modules to define reports which consolidate data from a number of REST and internal sources.
+core = 7.x
+php = 7
