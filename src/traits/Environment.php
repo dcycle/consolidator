@@ -7,6 +7,16 @@ namespace consolidator\traits;
  */
 trait Environment {
 
+  public function average($array, $item_key) : int {
+    $candidates = [];
+    array_walk($array, function ($item, $key) use (&$candidates, $item_key) {
+      if (isset($item[$item_key])) {
+        $candidates[] = $item[$item_key];
+      }
+    });
+    return array_sum($candidates) / count($candidates);
+  }
+
   public function batchSet(array $batch_definition) {
     batch_set($batch_definition);
   }

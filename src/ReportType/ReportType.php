@@ -45,7 +45,7 @@ abstract class ReportType {
     $context['results'] = [
       'class' => get_class($this),
       'report' => $context['sandbox']['buildReport'],
-      'generated' => date('d m Y, h:i'),
+      'generated' => date('d F Y, H:i'),
     ];
     $this->setContext($context);
     $context['finished'] = TRUE;

@@ -6,18 +6,37 @@ use consolidator\ReportType\ReportType;
 use consolidator\Report\Report;
 
 /**
- * A report.
+ * A sample report to copy-paste and build your own reports.
  */
 class CleanAirStarWarsReport extends ReportType {
 
+  /**
+   * Display markup for a report.
+   *
+   * @param array $report
+   *   A report as generated from ::buildReport().
+   *
+   * @return string
+   *   Markup.
+   */
   public function displayReport(array $report) : string {
-    return serialize($report);
+    $return = '<ul>';
+    foreach ($report as $item) {
+      $return .= '<li>' . $item['title'] . ':<strong> ' . $item['value'] . '</strong></li>';
+    }
+    return $return . '</ul>';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function name() : string {
     return 'Star wars characters average height vs. average air quality measurements in cities';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function steps() : array {
     return [
       'getStarwarsInfo' => [],
@@ -25,29 +44,38 @@ class CleanAirStarWarsReport extends ReportType {
     ];
   }
 
+  /**
+   * Step 1, get Star Wars character info.
+   */
   public function getStarwarsInfo() {
     return $this->getJson('https://swapi.co/api/people/?format=json');
   }
 
+  /**
+   * Step 2, get Cities air quality info.
+   */
   public function getCitiesInfo() {
     return $this->getJson('https://api.openaq.org/v1/cities?page=10');
   }
 
+  /**
+   * Final step, build a report.
+   */
   public function buildReport() : array {
     $starwars = $this->get('getStarwarsInfo');
     $cities = $this->get('getCitiesInfo');
 
-    $height = $this->parseJson($starwars, 'results/*/height', 'average');
-    $locations = $this->parseJson($cities, 'results/*/locations', 'average');
+    $height = $this->average($starwars['results'], 'height');
+    $readings = $this->average($cities['results'], 'count');
 
     return [
       [
-        'Average Star Wars character height',
-        $height,
+        'title' => 'Average Star Wars character height in cm',
+        'value' => $height,
       ],
       [
-        'Average Number of locations',
-        $locations,
+        'title' => 'Average Number of air quality readings',
+        'value' => $readings,
       ],
     ];
   }
