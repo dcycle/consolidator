@@ -11,8 +11,23 @@ abstract class ReportType {
 
   use Environment;
 
+  /**
+   * Build a report based on the information gathered during the steps.
+   *
+   * @return array
+   *   Report information which will be passed to ::displayReport().
+   */
   abstract public function buildReport() : array;
 
+  /**
+   * Display markup for a report.
+   *
+   * @param array $report
+   *   A report as generated from ::buildReport().
+   *
+   * @return string
+   *   Markup.
+   */
   abstract public function displayReport(array $report) : string;
 
   abstract public function name() : string;
@@ -76,6 +91,12 @@ abstract class ReportType {
     $steps['buildReport'] = [];
 
     return $steps;
+  }
+
+  public function rememberForNext($key, $value) {
+    $intra_step = $this->getIntraStepInfo();
+    $intra_step[$key] = $value;
+    $this->setStepDone(FALSE, $intra_step);
   }
 
   public function setContext(array $context) {

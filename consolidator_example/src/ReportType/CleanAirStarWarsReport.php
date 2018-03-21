@@ -11,13 +11,7 @@ use consolidator\Report\Report;
 class CleanAirStarWarsReport extends ReportType {
 
   /**
-   * Display markup for a report.
-   *
-   * @param array $report
-   *   A report as generated from ::buildReport().
-   *
-   * @return string
-   *   Markup.
+   * {@inheritdoc}
    */
   public function displayReport(array $report) : string {
     $return = '<ul>';
@@ -53,20 +47,26 @@ class CleanAirStarWarsReport extends ReportType {
 
   /**
    * Step 2, get Cities air quality info.
+   *
+   * This is an example for a single step which might take take several
+   * calls to complete. Calling $this->rememberForNext() will cause this
+   * to be called again until such a time as $this->rememberForNext() is
+   * not called.
    */
-  public function getCitiesInfo($info) {
+  public function getCitiesInfo() {
     $next_page = $this->fromLastCall('next-page', 1);
     $existing_results = $this->fromLastCall('existing', []);
 
     $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
+    $all_results = array_merge($existing_results, $cities['results']);
+
     if (count($cities['results'])) {
-      $this->setStepDone(FALSE, [
-        'next-page' => ++$next_page,
-        'existing' => array_merge($existing_results, $cities['results']),
-      ]);
+      $this->rememberForNext('next-page', ++$next_page);
+      $this->rememberForNext('existing', $all_results);
     }
     else {
-      $cities['results'] = array_merge($cities['results'], $existing_results);
+      $cities['results'] = $all_results;
+      $cities['total-calls'] = $next_page;
       return $cities;
     }
   }
@@ -89,6 +89,10 @@ class CleanAirStarWarsReport extends ReportType {
       [
         'title' => 'Average Number of air quality readings',
         'value' => $readings,
+      ],
+      [
+        'title' => 'Total api calls for air quality readings',
+        'value' => $cities['total-calls'],
       ],
     ];
   }
