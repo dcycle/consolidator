@@ -3,7 +3,9 @@ version: '2'
 services:
   # Drupal server
   web:
-    image: dcycle/drupal:7
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       DRUPAL_PROFILE: standard
       DRUPAL_SITE_NAME: Drupal
