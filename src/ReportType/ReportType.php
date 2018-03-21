@@ -25,6 +25,11 @@ abstract class ReportType {
     return $this->context;
   }
 
+  public function fromLastCall($key, $default) {
+    $intra_step = $this->getIntraStepInfo();
+    return array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
+  }
+
   public function getIntraStepInfo() : array {
     return $this->intra_step_info;
   }
@@ -46,8 +51,8 @@ abstract class ReportType {
         if (!array_key_exists($step, $context['sandbox']['_intra_step_info'])) {
           $context['sandbox']['_intra_step_info'][$step] = [];
         }
-        $this->setStepDone(TRUE);
-        $context['sandbox'][$step] = $this->{$step}($context['sandbox']['_intra_step_info'][$step]);
+        $this->setStepDone(TRUE, $context['sandbox']['_intra_step_info'][$step]);
+        $context['sandbox'][$step] = $this->{$step}();
         $context['sandbox']['_step_info'][$step]['done'] = $this->getStepDone();
         $context['sandbox']['_intra_step_info'][$step] = $this->getIntraStepInfo();
         $this->setContext($context);

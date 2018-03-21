@@ -54,9 +54,9 @@ class CleanAirStarWarsReport extends ReportType {
   /**
    * Step 2, get Cities air quality info.
    */
-  public function getCitiesInfo() {
-    $next_page = isset($info['next-page']) ? $info['next-page'] : 1;
-    $existing_results = isset($info['existing']) ? $info['existing'] : [];
+  public function getCitiesInfo($info) {
+    $next_page = $this->fromLastCall('next-page', 1);
+    $existing_results = $this->fromLastCall('existing', []);
 
     $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
     if (count($cities['results'])) {
