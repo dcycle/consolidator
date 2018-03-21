@@ -8,16 +8,10 @@ use consolidator\Report\Report;
 /**
  * A sample report to copy-paste and build your own reports.
  */
-class CleanAirStarWarsReport extends ReportType {
+class WorkplaceGroupsUsers extends ReportType {
 
   /**
-   * Display markup for a report.
-   *
-   * @param array $report
-   *   A report as generated from ::buildReport().
-   *
-   * @return string
-   *   Markup.
+   * {@inheritdoc}
    */
   public function displayReport(array $report) : string {
     $return = '<ul>';
@@ -54,20 +48,11 @@ class CleanAirStarWarsReport extends ReportType {
   /**
    * Step 2, get Cities air quality info.
    */
-  public function getCitiesInfo() {
-    $next_page = isset($info['next-page']) ? $info['next-page'] : 1;
-    $existing_results = isset($info['existing']) ? $info['existing'] : [];
-
-    $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
+  public function getCitiesInfo($info) {
+    $cities = $this->getJson('https://api.openaq.org/v1/cities?page=10');
     if (count($cities['results'])) {
-      $this->setStepDone(FALSE, [
-        'next-page' => ++$next_page,
-        'existing' => array_merge($existing_results, $cities['results']),
-      ]);
-    }
-    else {
-      $cities['results'] = array_merge($cities['results'], $existing_results);
-      return $cities;
+      $this->setStepDone(FALSE);
+
     }
   }
 

@@ -7,7 +7,7 @@ namespace consolidator\traits;
  */
 trait Environment {
 
-  public function average($array, $item_key) : int {
+  public function average($array, $item_key) : float {
     $candidates = [];
     array_walk($array, function ($item, $key) use (&$candidates, $item_key) {
       if (isset($item[$item_key])) {

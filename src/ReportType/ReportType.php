@@ -25,6 +25,14 @@ abstract class ReportType {
     return $this->context;
   }
 
+  public function getIntraStepInfo() : array {
+    return $this->intra_step_info;
+  }
+
+  public function getStepDone() {
+    return $this->step_done;
+  }
+
   public function id() : string {
     return get_class($this);
   }
@@ -34,8 +42,14 @@ abstract class ReportType {
     $context = $this->getContext();
 
     foreach (array_keys($all_steps) as $step) {
-      if (!array_key_exists($step, $context['sandbox'])) {
-        $context['sandbox'][$step] = $this->{$step}();
+      if (empty($context['sandbox']['_step_info'][$step]['done'])) {
+        if (!array_key_exists($step, $context['sandbox']['_intra_step_info'])) {
+          $context['sandbox']['_intra_step_info'][$step] = [];
+        }
+        $this->setStepDone(TRUE);
+        $context['sandbox'][$step] = $this->{$step}($context['sandbox']['_intra_step_info'][$step]);
+        $context['sandbox']['_step_info'][$step]['done'] = $this->getStepDone();
+        $context['sandbox']['_intra_step_info'][$step] = $this->getIntraStepInfo();
         $this->setContext($context);
         $context['finished'] = FALSE;
         return $context;
@@ -61,6 +75,11 @@ abstract class ReportType {
 
   public function setContext(array $context) {
     $this->context = $context;
+  }
+
+  public function setStepDone($done, array $intra_step_info = []) {
+    $this->step_done = $done;
+    $this->intra_step_info = $intra_step_info;
   }
 
   abstract public function steps() : array;
