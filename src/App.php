@@ -63,6 +63,10 @@ class App {
       '#type' => 'submit',
       '#value' => 'Go',
     );
+    $form['clear'] = array(
+      '#type' => 'submit',
+      '#value' => 'Clear all',
+    );
     $form['result'] = array(
       '#type' => 'markup',
       '#markup' => '<div class="report">' . $this->reportMarkup() . '</div>',
@@ -74,6 +78,12 @@ class App {
    * Submit handler for the consolidator admin form.
    */
   function formSubmit($form, &$form_state) {
+    if ($form_state['values']['op'] == 'Clear all') {
+      unset($_SESSION['consolidated_reports_result']);
+      drupal_set_message(t('Cleared session variables with old reports.'));
+      return;
+    }
+
     $report_class = $form_state['values']['batch'];
     $this->batchSet($this->batchDefinition(new $report_class));
   }
