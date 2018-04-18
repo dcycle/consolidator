@@ -21,8 +21,8 @@ trait Environment {
     batch_set($batch_definition);
   }
 
-  public function getJson(string $url) : array {
-    $http_result = drupal_http_request($url);
+  public function getJson(string $url, array $options = array()) : array {
+    $http_result = drupal_http_request($url, $options);
     if (empty($http_result->code)) {
       throw new \Exception('Http request does not have a resulting code.');
     }
