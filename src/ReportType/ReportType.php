@@ -60,16 +60,20 @@ abstract class ReportType {
   public function nextStep() {
     $all_steps = $this->operations();
     $context = $this->getContext();
+    if (!empty($context['sandbox'])) {
+      $context['sandbox'] = unserialize(gzuncompress($context['sandbox']));
+    }
 
     foreach (array_keys($all_steps) as $step) {
       if (empty($context['sandbox']['_step_info'][$step]['done'])) {
-        if (!array_key_exists($step, $context['sandbox']['_intra_step_info'])) {
+        if (empty($context['sandbox']['_intra_step_info'][$step])) {
           $context['sandbox']['_intra_step_info'][$step] = [];
         }
         $this->setStepDone(TRUE, $context['sandbox']['_intra_step_info'][$step]);
         $context['sandbox'][$step] = $this->{$step}();
         $context['sandbox']['_step_info'][$step]['done'] = $this->getStepDone();
         $context['sandbox']['_intra_step_info'][$step] = $this->getIntraStepInfo();
+        $context['sandbox'] = gzcompress(serialize($context['sandbox']), 9);
         $this->setContext($context);
         $context['finished'] = FALSE;
         return $context;
