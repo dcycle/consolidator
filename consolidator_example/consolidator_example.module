@@ -6,7 +6,6 @@ if (!module_load_include('php', 'consolidator_example', 'autoload')) {
 
 use consolidator_example\ReportType\CleanAirStarWarsReport;
 use consolidator_example\ReportType\CurrentSpaceStationLocation;
-use consolidator_example\ReportType\WorkplaceUsersAndDrupalUsers;
 
 function consolidator_example_consolidator_reports() {
 
