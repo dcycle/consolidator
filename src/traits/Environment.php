@@ -27,7 +27,7 @@ trait Environment {
       throw new \Exception('Http request does not have a resulting code.');
     }
     if ($http_result->code != 200) {
-      throw new \Exception('Http request code is not 200, it is ' . $http_result->code . ' for ' . $url);
+      throw new \Exception('Http result code is not 200, it is ' . $http_result->code . ' for ' . $url);
     }
     return $this->jsonDecode($http_result->data);
   }

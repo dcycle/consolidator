@@ -13,7 +13,6 @@ function consolidator_example_consolidator_reports() {
   return [
     new CleanAirStarWarsReport(),
     new CurrentSpaceStationLocation(),
-    new WorkplaceUsersAndDrupalUsers(),
   ];
 
 }

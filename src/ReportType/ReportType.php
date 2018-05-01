@@ -75,6 +75,7 @@ abstract class ReportType {
         $context['sandbox']['_intra_step_info'][$step] = $this->getIntraStepInfo();
         $context['sandbox'] = gzcompress(serialize($context['sandbox']), 9);
         $this->setContext($context);
+        $context['message'] = $this->progressMessage();
         $context['finished'] = FALSE;
         return $context;
       }
@@ -95,6 +96,18 @@ abstract class ReportType {
     $steps['buildReport'] = [];
 
     return $steps;
+  }
+
+  public function progressMessage(string $message = '') : string {
+    if ($message) {
+      $this->progressMessage = $message;
+    }
+    if (empty($this->progressMessage)) {
+      return 'Processing...';
+    }
+    else {
+      return $this->progressMessage;
+    }
   }
 
   public function rememberForNext($key, $value) {
