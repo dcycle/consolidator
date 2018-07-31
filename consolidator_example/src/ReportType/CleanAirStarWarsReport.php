@@ -43,6 +43,7 @@ class CleanAirStarWarsReport extends ReportType {
    */
   public function getStarwarsInfo() {
     return $this->getJson('https://swapi.co/api/people/?format=json');
+    $this->progressMessage = 'Getting all Star Wars information.';
   }
 
   /**
@@ -56,6 +57,8 @@ class CleanAirStarWarsReport extends ReportType {
   public function getCitiesInfo() {
     $next_page = $this->fromLastCall('next-page', 1);
     $existing_results = $this->fromLastCall('existing', []);
+
+    $this->progressMessage = 'Getting cities information (page ' . $next_page .').';
 
     $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
     $all_results = array_merge($existing_results, $cities['results']);
