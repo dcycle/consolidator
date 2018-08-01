@@ -3,6 +3,8 @@
 namespace consolidator\ReportType;
 
 use consolidator\traits\Environment;
+use consolidator\Persistence\Persistence;
+use consolidator\Persistence\SaveIsSession;
 
 /**
  * A report type.
@@ -76,7 +78,8 @@ abstract class ReportType {
    */
   public function fromLastCall($key, $default) {
     $intra_step = $this->getIntraStepInfo();
-    return array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
+    $unprocessed = array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
+    return $this->persistence()->decode($unprocessed);
   }
 
   /**
@@ -124,9 +127,11 @@ abstract class ReportType {
 
     foreach (array_keys($all_steps) as $step) {
       if (empty($context['sandbox']['_step_info'][$step]['done'])) {
+        // Get the information from the last call.
         if (empty($context['sandbox']['_intra_step_info'][$step])) {
           $context['sandbox']['_intra_step_info'][$step] = [];
         }
+        // Remember, internally, the information from the last call.
         $this->setStepDone(TRUE, $context['sandbox']['_intra_step_info'][$step]);
         $context['sandbox'][$step] = $this->{$step}();
         $context['sandbox']['_step_info'][$step]['done'] = $this->getStepDone();
@@ -163,6 +168,20 @@ abstract class ReportType {
   }
 
   /**
+   * Function
+   *
+   * Description
+   *
+   * @param $
+   *   What
+   *
+   * @return Persistence
+   *
+   * @throws Exception
+   */
+
+
+  /**
    * Within a step, get/set the progress message to show to the user.
    *
    * @param string $message
@@ -194,7 +213,7 @@ abstract class ReportType {
    */
   public function rememberForNext($key, $value) {
     $intra_step = $this->getIntraStepInfo();
-    $intra_step[$key] = $value;
+    $intra_step[$key] = $this->persistence()->encode($value);
     $this->setStepDone(FALSE, $intra_step);
   }
 
