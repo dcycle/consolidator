@@ -3,7 +3,6 @@
 namespace consolidator_example\ReportType;
 
 use consolidator\ReportType\ReportType;
-use consolidator\Report\Report;
 
 /**
  * A sample report to copy-paste and build your own reports.
@@ -32,7 +31,7 @@ mapTypeId: google.maps.MapTypeId.ROADMAP
 }
 var map = new google.maps.Map(map_canvas, map_options)
 var marker = new google.maps.Marker({
-  position: {lat: ' . $report['lat']  . ', lng: ' . $report['lon'] . '},
+  position: {lat: ' . $report['lat'] . ', lng: ' . $report['lon'] . '},
   map: map,
   title: "Position of the international space station"
 });

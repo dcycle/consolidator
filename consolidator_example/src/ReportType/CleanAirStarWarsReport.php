@@ -3,7 +3,6 @@
 namespace consolidator_example\ReportType;
 
 use consolidator\ReportType\ReportType;
-use consolidator\Report\Report;
 
 /**
  * A sample report to copy-paste and build your own reports.
@@ -42,8 +41,8 @@ class CleanAirStarWarsReport extends ReportType {
    * Step 1, get Star Wars character info.
    */
   public function getStarwarsInfo() {
-    return $this->getJson('https://swapi.co/api/people/?format=json');
     $this->progressMessage = 'Getting all Star Wars information.';
+    return $this->getJson('https://swapi.co/api/people/?format=json');
   }
 
   /**
@@ -58,7 +57,7 @@ class CleanAirStarWarsReport extends ReportType {
     $next_page = $this->fromLastCall('next-page', 1);
     $existing_results = $this->fromLastCall('existing', []);
 
-    $this->progressMessage = 'Getting cities information (page ' . $next_page .').';
+    $this->progressMessage = 'Getting cities information (page ' . $next_page . ').';
 
     $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
     $all_results = array_merge($existing_results, $cities['results']);

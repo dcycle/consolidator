@@ -15,6 +15,9 @@ class App {
   use Environment;
   use Singleton;
 
+  /**
+   * Batch definition info.
+   */
   public function batchDefinition(ReportType $report_type) : array {
     $batch = [
       'operations' => [
@@ -34,7 +37,10 @@ class App {
     return $batch;
   }
 
-  function batchOperation(ReportType $object, &$context) {
+  /**
+   * Batch operation info.
+   */
+  public function batchOperation(ReportType $object, &$context) {
     if (empty($context['sandbox'])) {
       $context['sandbox'] = [];
     }
@@ -42,14 +48,17 @@ class App {
     $context = $object->nextStep();
   }
 
-  function batchFinished($success, $results, $operations) {
+  /**
+   * Called when a batch operation is finished.
+   */
+  public function batchFinished($success, $results, $operations) {
     $_SESSION['consolidated_reports_result'] = $results;
   }
 
   /**
    * Callback for the consolidator admin form.
    */
-  function form() : array {
+  public function form() : array {
     $form['description'] = array(
       '#type' => 'markup',
       '#markup' => t('Select which report you would like to generate.'),
@@ -77,7 +86,7 @@ class App {
   /**
    * Submit handler for the consolidator admin form.
    */
-  function formSubmit($form, &$form_state) {
+  public function formSubmit($form, &$form_state) {
     if ($form_state['values']['op'] == 'Clear all') {
       unset($_SESSION['consolidated_reports_result']);
       drupal_set_message(t('Cleared session variables with old reports.'));
@@ -85,9 +94,12 @@ class App {
     }
 
     $report_class = $form_state['values']['batch'];
-    $this->batchSet($this->batchDefinition(new $report_class));
+    $this->batchSet($this->batchDefinition(new $report_class()));
   }
 
+  /**
+   * Testable implementation of hook_menu().
+   */
   public function hookMenu() : array {
     $items = array();
     $items['admin/reports/consolidator'] = array(
@@ -100,6 +112,9 @@ class App {
     return $items;
   }
 
+  /**
+   * Testable implementation of hook_permission().
+   */
   public function hookPermission() : array {
     return [
       'generate-consolidator-reports' => [
@@ -109,6 +124,12 @@ class App {
     ];
   }
 
+  /**
+   * Show a report from session memory if possible.
+   *
+   * @return string
+   *   Markup of a report, or an empty string.
+   */
   public function reportMarkup() : string {
     try {
       if (!empty($_SESSION['consolidated_reports_result'])) {
@@ -129,6 +150,14 @@ class App {
     return '';
   }
 
+  /**
+   * Get a list of all report types from all modules.
+   *
+   * @return ReportTypes
+   *   A collection of report types.
+   *
+   * @throws Exception
+   */
   public function reportTypeList() : ReportTypes {
     return new ReportTypes(module_invoke_all('consolidator_reports'));
   }

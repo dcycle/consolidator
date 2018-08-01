@@ -7,10 +7,16 @@ if (!module_load_include('php', 'consolidator', 'autoload')) {
 use consolidator\App;
 use consolidator\ReportType\ReportType;
 
+/**
+ * Batch operation information.
+ */
 function consolidator_batch_operation(ReportType $object, &$context) {
   return App::instance()->batchOperation($object, $context);
 }
 
+/**
+ * Called when a batch operation is finished.
+ */
 function consolidator_batch_finished($success, $results, $operations) {
   return App::instance()->batchFinished($success, $results, $operations);
 }

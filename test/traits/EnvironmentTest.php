@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Test Environment.
- */
+namespace consolidtor\Tests;
 
 use consolidator\traits\Environment;
 use PHPUnit\Framework\TestCase;
