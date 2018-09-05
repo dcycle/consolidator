@@ -3,6 +3,8 @@
 namespace consolidator\ReportType;
 
 use consolidator\traits\Environment;
+use consolidator\Persistence\Persistence;
+use consolidator\Persistence\SaveInSession;
 
 /**
  * A report type.
@@ -76,7 +78,8 @@ abstract class ReportType {
    */
   public function fromLastCall($key, $default) {
     $intra_step = $this->getIntraStepInfo();
-    return array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
+    $encoded = array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
+    return $this->persistence()->decode($encoded);
   }
 
   /**
@@ -163,6 +166,18 @@ abstract class ReportType {
   }
 
   /**
+   * Get a persistence engine for data which persists between requests.
+   *
+   * @return Persistence
+   *   A persistence engine.
+   *
+   * @throws Exception
+   */
+  public function persistence() : Persistence {
+    return new SaveInSession($this->name());
+  }
+
+  /**
    * Within a step, get/set the progress message to show to the user.
    *
    * @param string $message
@@ -194,7 +209,7 @@ abstract class ReportType {
    */
   public function rememberForNext($key, $value) {
     $intra_step = $this->getIntraStepInfo();
-    $intra_step[$key] = $value;
+    $intra_step[$key] = $this->persistence()->encode($value);
     $this->setStepDone(FALSE, $intra_step);
   }
 
