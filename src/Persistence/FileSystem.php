@@ -11,6 +11,14 @@ class FileSystem {
 
   use Singleton;
 
+  /**
+   * Delete everything, or a single file.
+   *
+   * @param string $file
+   *   A file name; if omitted, we will delete everything.
+   *
+   * @throws \Exception
+   */
   public function delete(string $file = '') {
     try {
       $fullpath = $this->diskLocation();
@@ -22,7 +30,7 @@ class FileSystem {
       $objects = scandir($fullpath);
       foreach ($objects as $object) {
         if ($object != '.' && $object != '..') {
-          if (is_dir($fullpath . '/' .$object)) {
+          if (is_dir($fullpath . '/' . $object)) {
             rrmdir($fullpath . '/' . $object);
           }
           else {
@@ -37,6 +45,17 @@ class FileSystem {
     }
   }
 
+  /**
+   * Retrieve data saved with ::filePutContents().
+   *
+   * @param string $file
+   *   A key provided by ::filePutContents().
+   *
+   * @return mixed
+   *   The data.
+   *
+   * @throws \Exception
+   */
   public function fileGetContents(string $file) {
     $full = $this->diskLocation() . '/' . $file;
     if (!is_file($full)) {
@@ -49,6 +68,17 @@ class FileSystem {
     return drupal_json_decode($data);
   }
 
+  /**
+   * Put contents on the disk and return a key with which to get them.
+   *
+   * @param mixed $data
+   *   The data.
+   *
+   * @return string
+   *   A key to be used with ::fileGetContents() later.
+   *
+   * @throws \Exception
+   */
   public function filePutContents($data) : string {
     $file = random_int(PHP_INT_MIN, PHP_INT_MAX);
     $full = $this->diskLocation() . '/' . $file;
@@ -81,7 +111,7 @@ class FileSystem {
     }
     $return = $return . '/consolidator';
     if (!file_exists($return)) {
-      if (mkdir($return, 0777, true) === FALSE) {
+      if (mkdir($return, 0777, TRUE) === FALSE) {
         throw new \Exception('Could not make directory ' . $return);
       }
     }
