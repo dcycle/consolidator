@@ -12,5 +12,5 @@ echo ''
 echo 'If all went well you can now access your site with username admin and:'
 echo 'password admin at:'
 echo ''
-echo ' => '$(./scripts/uli.sh)
+echo ' => '"$(./scripts/uli.sh)"
 echo ''

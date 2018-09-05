@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Test App.
- */
+namespace consolidtor\Tests;
 
 use PHPUnit\Framework\TestCase;
 use consolidator\App;
@@ -14,6 +11,7 @@ use consolidator\App;
  * @group consolidator
  */
 class AppTest extends TestCase {
+
   /**
    * Test for hookPermission().
    *

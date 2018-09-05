@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Test Singleton.
- */
+namespace consolidtor\Tests;
 
 use consolidator\traits\Singleton;
 use PHPUnit\Framework\TestCase;
