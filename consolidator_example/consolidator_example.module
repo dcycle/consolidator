@@ -5,12 +5,14 @@ if (!module_load_include('php', 'consolidator_example', 'autoload')) {
 }
 
 use consolidator_example\ReportType\CleanAirStarWarsReport;
+use consolidator_example\ReportType\CleanAirStarWarsReportDisk;
 use consolidator_example\ReportType\CurrentSpaceStationLocation;
 
 function consolidator_example_consolidator_reports() {
 
   return [
     new CleanAirStarWarsReport(),
+    new CleanAirStarWarsReportDisk(),
     new CurrentSpaceStationLocation(),
   ];
 
