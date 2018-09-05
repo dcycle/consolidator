@@ -57,14 +57,12 @@ class FileSystem {
     catch (\Exception $e) {
       // Cannot figure out what to delete, fail silently.
     }
-    $objects = scandir($fullpath);
     $files = glob($fullpath . '/*');
     $now   = time();
 
     foreach ($files as $file) {
       if (is_file($file)) {
-        dpm($now - filemtime($file));
-        if ($now - filemtime($file) >= 60 * 60) { // 1 hour
+        if ($now - filemtime($file) >= 60 * 60) {
           unlink($file);
         }
       }
