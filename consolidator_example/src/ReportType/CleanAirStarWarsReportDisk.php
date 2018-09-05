@@ -4,7 +4,6 @@ namespace consolidator_example\ReportType;
 
 use consolidator\Persistence\Persistence;
 use consolidator\Persistence\SaveOnDisk;
-use consolidator\ReportType\ReportType;
 
 /**
  * Similar to CleanAirStarWarsReport but stores intra-step info on disk.
