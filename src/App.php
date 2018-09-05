@@ -5,6 +5,7 @@ namespace consolidator;
 use consolidator\traits\Environment;
 use consolidator\traits\Singleton;
 use consolidator\Collection\ReportTypes;
+use consolidator\Persistence\FileSystem;
 use consolidator\ReportType\ReportType;
 
 /**
@@ -95,6 +96,13 @@ class App {
 
     $report_class = $form_state['values']['batch'];
     $this->batchSet($this->batchDefinition(new $report_class()));
+  }
+
+  /**
+   * Testable implementation of hook_cron().
+   */
+  public function hookCron() {
+    FileSystem::instance()->deleteOld();
   }
 
   /**
