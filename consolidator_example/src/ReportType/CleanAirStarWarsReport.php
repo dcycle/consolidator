@@ -57,10 +57,11 @@ class CleanAirStarWarsReport extends ReportType {
     $next_page = $this->fromLastCall('next-page', 1);
     $existing_results = $this->fromLastCall('existing', []);
 
-    $this->progressMessage = 'Getting cities information (page ' . $next_page . ').';
-
     $cities = $this->getJson('https://api.openaq.org/v1/cities?page=' . $next_page);
+
     $all_results = array_merge($existing_results, $cities['results']);
+
+    $this->progressMessage = 'Getting cities information (page ' . $next_page . '): ' . count($cities['results']) . ', total: ' . count($all_results);
 
     if (count($cities['results'])) {
       $this->rememberForNext('next-page', ++$next_page);

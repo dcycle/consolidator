@@ -78,8 +78,7 @@ abstract class ReportType {
    */
   public function fromLastCall($key, $default) {
     $intra_step = $this->getIntraStepInfo();
-    $encoded = array_key_exists($key, $intra_step) ? $intra_step[$key] : $default;
-    return $this->persistence()->decode($encoded);
+    return array_key_exists($key, $intra_step) ? $this->persistence()->decode($intra_step[$key]) : $default;
   }
 
   /**

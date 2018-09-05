@@ -14,7 +14,7 @@ class CleanAirStarWarsReportDisk extends CleanAirStarWarsReport {
    * {@inheritdoc}
    */
   public function name() : string {
-    return parent::name() . ' (saves to disk, not session)';
+    return parent::name() . ' (saves internal data to disk, not session)';
   }
 
   /**
