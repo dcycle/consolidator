@@ -1,0 +1,20 @@
+<?php
+
+if (!module_load_include('php', 'consolidator', 'autoload')) {
+  throw new \Exception('Could not find autoloader.');
+}
+
+use consolidator\Persistence\FileSystem;
+
+/**
+ * Implements hook_uninstall().
+ */
+function consolidator_uninstall() {
+  try {
+    FileSystem::instance()->delete();
+  }
+  catch (\Exceptien $e) {
+    // Could not delete the /path/to/consolidator file system.
+    watchdog('consolidator', 'Could not delete ' . FileSystem::instance()->diskLocation());
+  }
+}
